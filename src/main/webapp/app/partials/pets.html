@@ -1,4 +1,69 @@
-<p>This is the partial for view 2.</p>
-<p>
+<section id="portfolio">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Our Pets</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
 
-</p>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="well">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            Name Search: <input ng-model="queryName">
+                        </div>
+                        <div class="col-lg-3">
+                            <input type="checkbox" ng-model="queryAvailable" > Available
+                        </div>
+                        <div class="col-lg-3">
+                            Sort by:
+                            <select ng-model="orderProp">
+                                <option value="name">Name</option>
+                                <option value="category.name">Category</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2">
+                            <a href="#/addPet"><button ng-if="canCreatePet === true" type="button" class="btn btn-primary">Add new</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row" >
+                    <div class="col-lg-12">
+                        <table class="table" id="tabPets" cellspacing="0" cellpadding="0">
+                            <thead>
+                            <tr>
+                                <td>Name</td>
+                                <td>Category</td>
+                                <td>Photo</td>
+                                <td>Status</td>
+                                <td></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="pet in pets | filter:queryName | orderBy:orderProp " class="{{pet.status | availableFilterClass}}">
+                                <td>{{pet.name}}</td>
+                                <td>{{pet.category.name}}</td>
+                                <td><img ng-src="{{pet.imageUrl}}" class="img-responsive" width="48px" height="48px"></td>
+                                <td><span class="{{pet.status | availableFilterIcon}}" aria-hidden="true"></span></td>
+                                <td>
+                                    <a href="#/pet/{{pet.id}}"><button  type="button" class="btn btn-info">View</button></a>
+                                    <button ng-if="canDeletePet === true" ng-click="deletePet(pet.id, pet.name)" type="button" class="btn btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>

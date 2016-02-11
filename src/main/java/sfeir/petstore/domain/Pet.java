@@ -12,7 +12,7 @@ public class Pet {
     private Category category;
     private Set<Tag> tags = new HashSet<>();
     private Status status;
-
+    private String imageUrl;
 
     public Pet() {
     }
@@ -22,6 +22,8 @@ public class Pet {
         this.name = name;
         this.category = category;
         this.status = status;
+        //by default image url is the name in lower case
+        imageUrl = "img/" + name.toLowerCase() +".png";
     }
 
     public Integer getId() {
@@ -62,5 +64,13 @@ public class Pet {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

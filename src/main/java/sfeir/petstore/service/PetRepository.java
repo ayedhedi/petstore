@@ -78,7 +78,6 @@ public class PetRepository {
         return cat;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Pet> getAll() {
         return new ArrayList<>(petDatabase.values());
     }
