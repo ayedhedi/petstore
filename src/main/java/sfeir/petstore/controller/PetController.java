@@ -8,21 +8,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sfeir.petstore.domain.Pet;
+import sfeir.petstore.domain.Tag;
 import sfeir.petstore.service.PetRepository;
 
-import javax.annotation.security.PermitAll;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by ayed.h on 09/02/2016.
  */
 @RestController
-@RequestMapping("/pet")
+@RequestMapping("/api/pet")
 public class PetController {
     private static final Logger logger = Logger.getLogger(PetController.class.getName());
 
@@ -64,6 +66,14 @@ public class PetController {
         }
         //update category with exist one
         pet.setCategory(petRepository.getCategory(pet.getCategory().getName()));
+        //remove empty tags if any
+        Set<Tag> validTags = new HashSet<>();
+        if (pet.getTags() != null && !pet.getTags().isEmpty()) {
+            pet.getTags().stream().filter(tag ->
+                (tag.getKey() != null && !tag.getKey().isEmpty() && tag.getValue() != null && !tag.getValue().isEmpty())
+            ).forEach(validTags::add);
+            pet.setTags(validTags);
+        }
         //save the new object
         return petRepository.save(pet);
     }
@@ -100,7 +110,7 @@ public class PetController {
                         new BufferedOutputStream(new FileOutputStream(f));
                 stream.write(bytes);
                 stream.close();
-                return "{\"imageUrl\": \"img/"+name+"\"}";
+                return "{\"imageUrl\": \"img/"+name+".png"+"\"}";
             } catch (Exception e) {
                 return "You failed to upload " + name + " => " + e.getMessage();
             }

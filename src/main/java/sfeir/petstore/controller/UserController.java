@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by ayed.h on 11/02/2016.
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @RequestMapping(value = "/canCreate", method = RequestMethod.GET)

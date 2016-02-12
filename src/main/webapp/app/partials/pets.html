@@ -15,7 +15,7 @@
                             Name Search: <input ng-model="queryName">
                         </div>
                         <div class="col-lg-3">
-                            <input type="checkbox" ng-model="queryAvailable" > Available
+                            <input type="checkbox" ng-model="queryAvailable"> Available
                         </div>
                         <div class="col-lg-3">
                             Sort by:
@@ -25,7 +25,7 @@
                             </select>
                         </div>
                         <div class="col-lg-2">
-                            <a href="#/addPet"><button ng-if="canCreatePet === true" type="button" class="btn btn-primary">Add new</button></a>
+                            <a href="#/addPet"><button ng-if="canCreatePet === true" type="button" class="btn btn-primary">Add Pet</button></a>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="pet in pets | filter:queryName | orderBy:orderProp " class="{{pet.status | availableFilterClass}}">
+                            <tr ng-repeat="pet in pets | filter:filterAvailability | filter:{ name: queryName } | orderBy:orderProp " class="{{pet.status | availableFilterClass}}">
                                 <td>{{pet.name}}</td>
                                 <td>{{pet.category.name}}</td>
                                 <td><img ng-src="{{pet.imageUrl}}" class="img-responsive" width="48px" height="48px"></td>

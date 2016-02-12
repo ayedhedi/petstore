@@ -79,6 +79,9 @@ public class PetRepository {
     }
 
     public List<Pet> getAll() {
+        petDatabase.values().stream().filter(pet -> pet.getImageUrl()==null).forEach(pet ->
+            pet.setImageUrl("img/__nopicture__.png")
+        );
         return new ArrayList<>(petDatabase.values());
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
  * Created by ayed.h on 09/02/2016.
  */
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/api/category")
 public class CategoryController {
 
 

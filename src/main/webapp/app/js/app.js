@@ -1,5 +1,5 @@
 'use strict';
-var url_base = "http://localhost:8080/";
+var url_base = "http://localhost:8080/api";
 
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
@@ -33,7 +33,7 @@ angular.module('myApp', [
             // keep user logged in after page refresh
             $rootScope.authdata = $cookieStore.get('authdata') || {};
             if ($rootScope.authdata) {
-              //  $http.defaults.headers.common['Authorization'] =  $rootScope.authdata;
+                $http.defaults.headers.common['Authorization'] =  $rootScope.authdata;
             }
 
             $rootScope.$on('$locationChangeStart', function (event, next, current) {
@@ -89,6 +89,11 @@ angular.module('myApp', [
             }
             console.log("I will remove "+petId+":"+petName);
         };
+        $scope.filterAvailability =  function(pet) {
+            if(!$scope.queryAvailable || pet.status=='AVAILABLE'){
+                return pet;
+            }
+        };
     })
 
     .controller('PetDetailsCtrl', function($scope, $routeParams, PetsService) {
@@ -98,7 +103,7 @@ angular.module('myApp', [
         }, $routeParams.petId);
     })
 
-    .controller('CreatePetCtrl', function($scope,$http,$rootScope) {
+    .controller('CreatePetCtrl', function($scope,$http,$rootScope,$location, PetsService) {
         $scope.image = null;
         $scope.newPet = {};
         $scope.newPet.category = {};
@@ -110,14 +115,15 @@ angular.module('myApp', [
 
 
         $scope.createPet = function() {
-            console.log($scope.image);
-            if ($scope.newPet.name != '') {
-                //save the image if any !!
-                if ($scope.image!=null) {
-                    var fd = new FormData();
-                    //Take the first selected file
-                    fd.append("file", $scope.image[0]);
-                    fd.append("name", $scope.newPet.name);
+            var fd;
+            //save the image if any !!
+            if ($scope.image!=null) {                                                       // ------> With Image
+                fd = new FormData();
+                //Take the first selected file
+                fd.append("file", $scope.image[0]);
+                fd.append("name", $scope.newPet.name);
+                var promise = function(){
+                    var deferred = angular.injector(['ng']).get('$q').defer();
                     $http({
                         method: 'POST',
                         data: fd,
@@ -127,17 +133,34 @@ angular.module('myApp', [
                     }).success(function(result){
                         $scope.newPet.imageUrl=null;
                         $scope.newPet.imageUrl=result.imageUrl;
+                        deferred.resolve();
                     }).error(function(){
                         console.log('Error');
                     });
-                }
+                    return deferred.promise;
+                };
+                promise().then(function () {
+                    PetsService.createNewPet(function (result) {
+                        $location.path('/pets');
+                    }, $scope.newPet);
+                })
             }
+        };
+        $scope.checkTags = function () {
+            return $scope.newPet.tags.filter(function (tag) {
+                    return tag.key=='' || tag.value=='';
+            }).length > 1;
         };
         $scope.updateNewPet = function() {
             var length = $scope.newPet.tags.length;
             var tags = $scope.newPet.tags;
-            if (length == 0 || tags[length-1].key != '') {
+            if (tags[length-1].value != '' || tags[length-1].key != '') {
                 tags.push({key:"", value:""});
+            }
+            if (length>1 &&
+                tags[length-2].value == '' && tags[length-2].key == '' &&
+                tags[length-1].value == '' && tags[length-1].key == '') {
+                tags.pop();
             }
         };
         $scope.uploadFile = function(files) {
@@ -165,6 +188,19 @@ angular.module('myApp', [
                 headers: {'Authorization': $rootScope.authdata}
             }).success(function(data){
                 callbackFunc(data);
+            }).error(function(){
+                console.log('Error');
+            });
+        };
+        this.createNewPet = function (callbackFunc,pet) {
+            $http({
+                method: 'POST',
+                data: angular.toJson(pet, false),
+                url: url_base+'/pet',
+                headers: {'Authorization': $rootScope.authdata, 'Content-type':'application/json'},
+                transformRequest: angular.identity
+            }).success(function(result){
+                callbackFunc(result);
             }).error(function(){
                 console.log('Error');
             });
@@ -210,8 +246,8 @@ angular.module('myApp', [
         }
     })
 
-    .factory('AuthenticationService', ['$cookieStore', '$rootScope', '$timeout',
-        function ($cookieStore, $rootScope, $timeout) {
+    .factory('AuthenticationService', ['$rootScope', '$timeout','$cookieStore',
+        function ($rootScope, $timeout,$cookieStore) {
             var service = {};
             service.Login = function (username, password, callback) {
                 $timeout(function(){
@@ -220,9 +256,13 @@ angular.module('myApp', [
                     if (username==='user2' && password==='secret2') {
                         $rootScope.authdata = "Basic dXNlcjI6c2VjcmV0Mg==";
                         response.success = true;
+                        $cookieStore.put('authdata', $rootScope.authdata);
+
                     }else if (username==='user1' && password==='secret1') {
                         $rootScope.authdata = "Basic dXNlcjE6c2VjcmV0MQ==";
                         response.success = true;
+                        $cookieStore.put('authdata', $rootScope.authdata);
+
                     }else {
                         $rootScope.authdata = null;
                     }
