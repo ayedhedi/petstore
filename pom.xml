@@ -24,6 +24,16 @@
         <java.version>1.8</java.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-servlet_3.0_spec</artifactId>
+                <version>1.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -47,37 +57,52 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-servlet_3.0_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 
     <build>
         <finalName>petStore</finalName>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <configuration>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                        <warName>petStore</warName>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                    <artifactId>liberty-maven-plugin</artifactId>
+                    <version>1.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-<!--
             <plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
-                <version>1.0.0.Final</version>
+                <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
                 <configuration>
-                    <hostname>127.0.0.1</hostname>
-                    <port>9990</port>
-                    <username>adminzZDJUQ4</username>
-                    <password>b2iGk37fBz7M</password>
+                    <configFile>src/main/resources/server.xml</configFile>
+                    <bootstrapProperties>
+                        <appLocation>../../../../../${project.build.finalName}</appLocation>
+                    </bootstrapProperties>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 
