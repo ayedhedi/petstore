@@ -101,13 +101,12 @@ public class PetController {
                                                  @RequestParam("file") MultipartFile file){
         if (!file.isEmpty()) {
             try {
-                File f = new File("src"+File.separator+"main"+File.separator+"webapp"+
-                        File.separator+"app"+File.separator+"img"+File.separator+name+".png");
-                logger.info(f.getAbsolutePath());
+                File f = new File("app"+File.separator+"app"+File.separator+"img"+File.separator+name+".png");
+                logger.info(f.getPath());
 
                 byte[] bytes = file.getBytes();
                 BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(f.getAbsoluteFile()));
+                        new BufferedOutputStream(new FileOutputStream(f));
                 stream.write(bytes);
                 stream.close();
                 return "{\"imageUrl\": \"img/"+name+".png"+"\"}";
