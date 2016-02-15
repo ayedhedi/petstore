@@ -1,8 +1,8 @@
 applications:
-- path: target/JavaHelloWorldApp.war
+- path: target/petStore.war
   memory: 512M
   instances: 1
   domain: mybluemix.net
-  name: TestJavaApp2016
-  host: testjavaapp2016
+  name: AyedPetStore
+  host: AyedPetStore
   disk_quota: 1024M
