@@ -127,10 +127,10 @@ public class PetController {
                         new BufferedOutputStream(new FileOutputStream(f));
                 stream.write(bytes);
                 stream.close();
-                return "{\"imageUrl\": \"img"+File.separator+name+".png"+"\"}";
+                return "{\"imageUrl\": \".."+File.separator+name+"img"+File.separator+name+".png"+"\"}";
             } catch (Exception e) {
                 e.printStackTrace();
-                return "You failed to upload " + name + " => " + e.getMessage();
+                return "{error: \""+e.getMessage()+"\" }";
             }
         } else {
             return "You failed to upload " + name + " because the file was empty.";
