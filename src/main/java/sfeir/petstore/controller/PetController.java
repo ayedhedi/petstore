@@ -11,6 +11,7 @@ import sfeir.petstore.domain.Pet;
 import sfeir.petstore.domain.Tag;
 import sfeir.petstore.service.PetRepository;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -30,6 +31,23 @@ public class PetController {
 
     @Autowired
     private PetRepository petRepository;
+
+    @PostConstruct
+    public void init() {
+        logger.info("checking for the image uploads folder");
+        File imgFolder = new File("img");
+        if (!imgFolder.exists()) {
+            try {
+                if (imgFolder.mkdir()) {
+                    logger.info("Image folder is now created !!");
+                }
+            }catch (Exception e){
+                logger.warn("Error creating images folder: "+e.getMessage());
+            }
+        }else {
+            logger.info("Image folder already exist");
+        }
+    }
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -101,7 +119,7 @@ public class PetController {
                                                  @RequestParam("file") MultipartFile file){
         if (!file.isEmpty()) {
             try {
-                File f = new File(name+".png");
+                File f = new File("img"+File.separator+name+".png");
                 logger.info(f.getPath());
 
                 byte[] bytes = file.getBytes();
@@ -109,7 +127,7 @@ public class PetController {
                         new BufferedOutputStream(new FileOutputStream(f));
                 stream.write(bytes);
                 stream.close();
-                return "{\"imageUrl\": \"app"+File.pathSeparator+name+".png"+"\"}";
+                return "{\"imageUrl\": \"app"+File.separator+name+".png"+"\"}";
             } catch (Exception e) {
                 e.printStackTrace();
                 return "You failed to upload " + name + " => " + e.getMessage();
