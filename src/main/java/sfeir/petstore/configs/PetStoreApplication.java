@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "sfeir.petstore")
-@PropertySource("classpath:app.properties")
 public class PetStoreApplication {
 
     public static void main(String[] args) {

@@ -99,10 +99,15 @@ petStoreApp
                     return deferred.promise;
                 };
                 promise().then(function () {
-                    PetsService.createNewPet(function (result) {
+                    PetsService.createNewPet(function () {
                         $location.path('/pets');
                     }, $scope.newPet);
                 })
+            }else {
+                $scope.newPet.imageUrl="img/__nopicture__.png";
+                PetsService.createNewPet(function () {
+                    $location.path('/pets');
+                }, $scope.newPet);
             }
         };
         $scope.checkTags = function () {
