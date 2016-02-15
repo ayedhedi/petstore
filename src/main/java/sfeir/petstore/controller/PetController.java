@@ -112,6 +112,7 @@ public class PetController {
                 stream.close();
                 return "{\"imageUrl\": \"img/"+name+".png"+"\"}";
             } catch (Exception e) {
+                e.printStackTrace();
                 return "You failed to upload " + name + " => " + e.getMessage();
             }
         } else {
