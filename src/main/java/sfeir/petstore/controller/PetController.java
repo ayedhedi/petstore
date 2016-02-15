@@ -107,7 +107,7 @@ public class PetController {
 
                 byte[] bytes = file.getBytes();
                 BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(f));
+                        new BufferedOutputStream(new FileOutputStream(f.getAbsoluteFile()));
                 stream.write(bytes);
                 stream.close();
                 return "{\"imageUrl\": \"img/"+name+".png"+"\"}";
