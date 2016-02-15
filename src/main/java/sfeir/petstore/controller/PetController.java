@@ -109,7 +109,7 @@ public class PetController {
                         new BufferedOutputStream(new FileOutputStream(f));
                 stream.write(bytes);
                 stream.close();
-                return "{\"imageUrl\": \""+name+".png"+"\"}";
+                return "{\"imageUrl\": \"app"+File.pathSeparator+name+".png"+"\"}";
             } catch (Exception e) {
                 e.printStackTrace();
                 return "You failed to upload " + name + " => " + e.getMessage();
