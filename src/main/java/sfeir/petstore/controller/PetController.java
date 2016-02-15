@@ -127,7 +127,7 @@ public class PetController {
                         new BufferedOutputStream(new FileOutputStream(f));
                 stream.write(bytes);
                 stream.close();
-                return "{\"imageUrl\": \".."+File.separator+name+"img"+File.separator+name+".png"+"\"}";
+                return "{\"imageUrl\": \".."+File.separator+"img"+File.separator+name+".png"+"\"}";
             } catch (Exception e) {
                 e.printStackTrace();
                 return "{error: \""+e.getMessage()+"\" }";
