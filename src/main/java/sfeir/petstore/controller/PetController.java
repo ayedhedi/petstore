@@ -101,7 +101,7 @@ public class PetController {
                                                  @RequestParam("file") MultipartFile file){
         if (!file.isEmpty()) {
             try {
-                File f = new File("app"+File.separator+"app"+File.separator+"img"+File.separator+name+".png");
+                File f = new File(name+".png");
                 logger.info(f.getPath());
 
                 byte[] bytes = file.getBytes();
@@ -109,7 +109,7 @@ public class PetController {
                         new BufferedOutputStream(new FileOutputStream(f));
                 stream.write(bytes);
                 stream.close();
-                return "{\"imageUrl\": \"img/"+name+".png"+"\"}";
+                return "{\"imageUrl\": \""+name+".png"+"\"}";
             } catch (Exception e) {
                 e.printStackTrace();
                 return "You failed to upload " + name + " => " + e.getMessage();
