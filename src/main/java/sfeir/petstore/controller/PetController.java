@@ -2,6 +2,8 @@ package sfeir.petstore.controller;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,23 +33,34 @@ public class PetController {
 
     @Autowired
     private PetRepository petRepository;
+    @Qualifier("environment")
+    @Autowired
+    private Environment environment;
+
+/*
+    private static String imageFolder = "";
 
     @PostConstruct
     public void init() {
-        logger.info("checking for the image uploads folder");
-        File imgFolder = new File("img");
-        if (!imgFolder.exists()) {
-            try {
-                if (imgFolder.mkdir()) {
-                    logger.info("Image folder is now created !!");
+        //only on the server
+        if (environment.getProperty("")!=null) {
+            logger.info("seems to be on the server !! ");
+            imageFolder = environment.getProperty("");
+            logger.info("checking for the image uploads folder");
+            File imgFile = new File(imageFolder);
+            if (!imgFile.exists()) {
+                try {
+                    if (imgFile.mkdir()) {
+                        logger.info("Image folder is now created !!");
+                    }
+                }catch (Exception e){
+                    logger.warn("Error creating images folder: "+e.getMessage());
                 }
-            }catch (Exception e){
-                logger.warn("Error creating images folder: "+e.getMessage());
+            }else {
+                logger.info("Image folder already exist");
             }
-        }else {
-            logger.info("Image folder already exist");
         }
-    }
+    }*/
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -119,15 +132,26 @@ public class PetController {
                                                  @RequestParam("file") MultipartFile file){
         if (!file.isEmpty()) {
             try {
-                File f = new File("img"+File.separator+name+".png");
-                logger.info(f.getPath());
+                /**
+                 * File f = new File("src"+File.separator+"main"+File.separator+"webapp"+
+                 File.separator+"app"+File.separator+"img"+File.separator+name+".png");
 
+                 */
+                String imageFolder = "src"+File.separator+"main"+File.separator+"webapp"+
+                        File.separator+"app"+File.separator+"img";
+
+                if (environment.getProperty("server.uploadFileTarget")!=null) {
+                    imageFolder = environment.getProperty("server.uploadFileTarget").replace(":",File.separator);
+                }
+
+                File f = new File(imageFolder+File.separator+name+".png");
+                logger.info(f.getPath());
                 byte[] bytes = file.getBytes();
-                BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(f));
+                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(f));
                 stream.write(bytes);
                 stream.close();
-                String jsonResult = "{\"imageUrl\": \"..\\"+File.separator+"img\\"+File.separator+name+".png"+"\"}";
+
+                String jsonResult = "{\"imageUrl\": \"img\\"+File.separator+name+".png"+"\"}";
                 logger.info("Json answer= "+jsonResult);
                 return jsonResult;
             } catch (Exception e) {

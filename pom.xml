@@ -24,6 +24,8 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- ':' will be replaced by system file separator  -->
+        <server.uploadFileTarget>app:img</server.uploadFileTarget>
     </properties>
 
     <dependencies>
@@ -71,7 +73,7 @@
                             <goal>write-project-properties</goal>
                         </goals>
                         <configuration>
-                            <outputFile>${project.build.outputDirectory}/my.properties</outputFile>
+                            <outputFile>${project.build.outputDirectory}/app.properties</outputFile>
                         </configuration>
                     </execution>
                 </executions>

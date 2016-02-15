@@ -124,6 +124,7 @@ petStoreApp
         };
         $scope.uploadFile = function(files) {
             $scope.image = files;
+            console.log(files);
         };
     })
 
