@@ -1,0 +1,31 @@
+<a href="#/pets"> <<- Go back</a>
+
+<section id="portfolio">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <div class="thumbnail">
+                    <img ng-src="../../../assets/{{pet.imageUrl}}" alt="{{pet.name}}">
+                    <h3 align="center">{{pet.name}}</h3>
+                    <div class="caption">
+
+                        <table class="table" id="tabPets" cellspacing="0" cellpadding="0">
+                            <tbody>
+                            <tr>
+                                <td>Category</td>
+                                <td>{{pet.category.name}}</td>
+                            </tr>
+                            <tr ng-repeat="tag in pet.tags">
+                                <td>{{tag.key}}</td>
+                                <td>{{tag.value}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+    </div>
+</section>
