@@ -9,14 +9,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 /**
  * Created by ayed.h on 11/02/2016.
  */
 @RestController
-@RequestMapping("/api/user")
 public class UserController {
 
-    @RequestMapping(value = "/canCreate", method = RequestMethod.GET)
+    @RequestMapping("/login")
+    public Principal user(Principal user) {
+        return user;
+    }
+
+
+    @RequestMapping(value = "/api/user/canCreate", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     @ResponseBody
     public boolean canCreatePets( @AuthenticationPrincipal final UserDetails user) {
@@ -28,7 +35,7 @@ public class UserController {
         return false;
     }
 
-    @RequestMapping(value = "/canDelete", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/user/canDelete", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     @ResponseBody
     public boolean canDeletePets( @AuthenticationPrincipal final UserDetails user) {

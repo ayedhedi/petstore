@@ -141,7 +141,7 @@ public class PetController {
                         File.separator+"app"+File.separator+"img";
 
                 if (environment.getProperty("server.uploadFileTarget")!=null) {
-                    imageFolder = environment.getProperty("server.uploadFileTarget").replace(":",File.separator);
+                    imageFolder = environment.getProperty("server.uploadFileTarget");
                 }
 
                 File f = new File(imageFolder+File.separator+name+".png");
